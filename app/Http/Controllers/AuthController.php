@@ -15,6 +15,12 @@ class AuthController extends Controller
         return response()->json($users);
     }
 
+    public function getById(string $id)
+    {
+        $user = User::find($id);
+        return response()->json($user);
+    }
+    
     public function register(Request $request)
     {
         try {
@@ -59,7 +65,6 @@ class AuthController extends Controller
 
                 return response()->json([
                     'message' => 'login successful',
-                    'data' => $user->role->nama,
                     'token' => $request->session()->get('_token'),
                 ], 200);
             } else {
