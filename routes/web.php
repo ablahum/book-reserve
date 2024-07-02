@@ -1,11 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
 
-Route::controller(UserController::class)->group(function () {
+Route::get('/', function () {
+    return response()->json(['csrf_token' => csrf_token()]);
+});
+
+Route::controller(AuthController::class)->group(function () {
     Route::get('/users', 'index');
 
-    Route::post('/users/login', 'login');
-    Route::post('/users/register', 'register');
+    Route::post('/auth/register', 'register');
+    Route::post('/auth/login', 'login');
+    Route::post('/auth/logout', 'logout');
 });
