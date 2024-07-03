@@ -13,7 +13,7 @@ class Layanan extends Model
 
     protected $guarded = ["id"];
 
-    public function pesanan() {
+    public function pesanans() {
         return $this->hasMany(Pesanan::class);
     }
 }

@@ -17,7 +17,10 @@ return new class extends Migration
             $table->string('nomor_hp');
             $table->string('email');
             $table->string('password');
-            $table->integer('role');
+        });
+
+        Schema::table('pesanans', function (Blueprint $table) {
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
         });
     }
 
@@ -26,6 +29,11 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('pesanans', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropColumn('user_id');
+        });
+        
         Schema::dropIfExists('users');
     }
 };

@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
         });
+
+        Schema::table('pesanans', function (Blueprint $table) {
+            $table->foreignId('layanan_id')->constrained()->onDelete('cascade');
+        });
     }
 
     /**
@@ -22,6 +26,11 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('pesanans', function (Blueprint $table) {
+            $table->dropForeign(['layanan_id']);
+            $table->dropColumn('layanan_id');
+        });
+        
         Schema::dropIfExists('layanans');
     }
 };

@@ -14,12 +14,6 @@ class AuthController extends Controller
         $users = User::all();
         return response()->json($users);
     }
-
-    public function getById(string $id)
-    {
-        $user = User::find($id);
-        return response()->json($user);
-    }
     
     public function register(Request $request)
     {
@@ -32,7 +26,7 @@ class AuthController extends Controller
             ]);
             
             $data['password'] = Hash::make($data['password']);
-            $data['role'] = 2;
+            $data['role_id'] = 2;
 
             User::create($data);
 
@@ -83,17 +77,5 @@ class AuthController extends Controller
                 'error' => $err->getMessage()
             ], 500);
         }
-    }
-    
-    public function logout(Request $request)
-    {
-        Auth::logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return response()->json([
-            'message' => 'logout successful'
-        ], 200);
     }
 }
