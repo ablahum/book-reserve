@@ -45,35 +45,60 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
-        $data = $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
+            $data = $request->validate([
+                'email' => 'required|string|email',
+                'password' => 'required|string',
+            ]);
 
-        $user = User::where('email', $data['email'])
-        ->first();
+            $user = User::where('email', $data['email'])
+            ->first();
 
-        if ($user) {
-            if (Hash::check($data['password'], $user->password)) {
-                $request->session()->regenerate();
+            if ($user) {
+                if (Hash::check($data['password'], $user->password)) {
+                    $request->session()->regenerate();
 
-                return response()->json([
-                    'message' => 'login successful',
-                    'token' => $request->session()->get('_token'),
-                ], 200);
+                    return response()->json([
+                        'message' => 'login successful',
+                        'token' => $request->session()->get('_token'),
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'message' => 'wrong email or password',
+                    ], 400);
+                }
             } else {
                 return response()->json([
-                    'message' => 'wrong email or password',
+                    'message' => 'user not found'
                 ], 400);
             }
-        } else {
-            return response()->json([
-                'message' => 'user not found'
-            ], 400);
-        }
         } catch (Exception $err) {
             return response()->json([
                 'message' => 'login failed',
+                'error' => $err->getMessage()
+            ], 500);
+        }
+    }
+
+    public function logout(Request $request)
+    {
+        // Auth::logout();
+
+        try {
+            $session = $request->session();
+            
+            return response()->json([
+                'session' => $session
+            ]);
+
+            // $request->session()->invalidate();
+            // $request->session()->regenerateToken();
+
+            // return response()->json([
+            //     'message' => 'logout successful'
+            // ], 200);
+        } catch (Exception $err) {
+            return response()->json([
+                'message' => 'logout failed',
                 'error' => $err->getMessage()
             ], 500);
         }

@@ -10,30 +10,33 @@ Route::get('/', function () {
 });
 
 Route::controller(AuthController::class)->group(function () {
-    Route::middleware('role:admin')->group(function () {
+    // Route::middleware('role:admin')->group(function () {
         Route::get('/users', 'index');
-    });
+    // });
 
     Route::post('/auth/register', 'register');
     Route::post('/auth/login', 'login');
+    Route::post('/auth/logout', 'logout');
 });
 
-Route::controller(LayananController::class)->group(function () {
-    Route::get('/layanan', 'index');
-
-    Route::middleware('role:admin')->group(function () {
-        Route::post('/layanan', 'store');
-        Route::put('/layanan/{id}', 'update');
-        Route::delete('/layanan/{id}', 'destroy');
+Route::middleware('login-required')->group(function () {
+    Route::controller(LayananController::class)->group(function () {
+        Route::get('/layanan', 'index');
+    
+        // Route::middleware('role:admin')->group(function () {
+            Route::post('/layanan', 'store');
+            Route::put('/layanan/{id}', 'update');
+            Route::delete('/layanan/{id}', 'destroy');
+        // });
     });
-});
 
-Route::controller(PesananController::class)->group(function () {
-    // Route::get('/pesanan', 'index');
-    Route::post('/pesanan', 'store');
-
-    Route::middleware('role:admin')->group(function () {
-        Route::get('/pesanan', 'index');
-        Route::put('/pesanan/{id}', 'update');
+    Route::controller(PesananController::class)->group(function () {
+        // Route::get('/pesanan', 'index');
+        Route::post('/pesanan', 'store');
+    
+        // Route::middleware('role:admin')->group(function () {
+            Route::get('/pesanan', 'index');
+            Route::put('/pesanan/{id}', 'update');
+        // });
     });
 });
